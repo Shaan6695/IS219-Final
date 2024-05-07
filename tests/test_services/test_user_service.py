@@ -179,3 +179,24 @@ async def test_verification_email_after_created_user(db_session, email_service):
         "role": UserRole.ADMIN
     }
 
+    # Calling register_user method
+    user = await UserService.register_user(db_session, user_data, email_service)
+
+    #Assert user is not None
+    assert user is not None
+    assert user.email == user_data["email"]
+
+# Testing to verify an email
+async def test_verify_email_with_expired_token(db_session, user):
+    expired_token = "example_expired_token"
+    user.verification_token = expired_token
+    await db_session.commit()
+    result = await UserService.verify_email_with_token(db_session, user.id, expired_token)
+    assert result is True
+
+# Testing updating nickname
+async def test_update_user_nickname(db_session, user):
+    new_nickname = "new_nickname_test"
+    updated_user = await UserService.update(db_session, user.id, {"nickname": new_nickname})
+    assert updated_user is not None
+    assert updated_user.nickname == new_nickname
