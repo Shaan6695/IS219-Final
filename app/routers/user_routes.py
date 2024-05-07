@@ -259,4 +259,38 @@ async def verify_email(user_id: UUID, token: str, db: AsyncSession = Depends(get
         return {"message": "Email verified successfully"}
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired verification token")
 
+@router.get("/users/search/", response_model=UserListResponse, tags=["User Management Requires (Admin or Manager Roles)"])
+async def search_users(
+    request: Request,
+    username: Optional[str] = Query(None, description="Username to search"),
+    email: Optional[str] = Query(None, description="Email to search"),
+    first_name: Optional[str] = Query(None, description="First name to search"),
+    last_name: Optional[str] = Query(None, description="Last name to search"),
+    role: Optional[str] = Query(None, description="Role to search"),
+    account_status: Optional[str] = Query(None, description="Account status to filter (active or locked)"),
+    registration_date_from: Optional[datetime] = Query(None, description="Range of the Start of registration"),
+    registration_date_to: Optional[datetime] = Query(None, description="Range of the End of registration date"),
+    skip: int = Query(0, description="Number of records to skip"),
+    limit: int = Query(10, description="Maximum number of records to return"),
+    db: AsyncSession = Depends(get_db)
+):
+    total_users = await UserService.count(db)
 
+    users = await UserService.search_users(db, username=username, email=email, first_name=first_name, last_name=last_name, role=role, account_status=account_status, registration_date_from=registration_date_from, registration_date_to=registration_date_to, skip=skip, limit=limit)
+
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found with inputted information")
+
+    user_responses = [
+        UserResponse.model_validate(user) for user in users
+    ]
+
+    pagination_links = generate_pagination_links(request, skip, limit, total_users)
+
+    return UserListResponse(
+        items=user_responses,
+        total=total_users,
+        page=skip // limit + 1,
+        size=len(user_responses),
+        links=pagination_links
+    )
