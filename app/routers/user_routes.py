@@ -74,7 +74,8 @@ async def get_user(user_id: UUID, request: Request, db: AsyncSession = Depends(g
         last_login_at=user.last_login_at,
         created_at=user.created_at,
         updated_at=user.updated_at,
-        links=create_user_links(user.id, request)  
+        links=create_user_links(user.id, request),
+        is_professional=user.is_professional   
     )
 
 # Additional endpoints for update, delete, create, and list users follow a similar pattern, using
@@ -146,6 +147,8 @@ async def create_user(user: UserCreate, request: Request, db: AsyncSession = Dep
     Returns:
     - UserResponse: The newly created user's information along with navigation links.
     """
+    
+    # Here you can check the emails
     existing_user = await UserService.get_by_email(db, user.email)
     if existing_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
@@ -167,7 +170,11 @@ async def create_user(user: UserCreate, request: Request, db: AsyncSession = Dep
         last_login_at=created_user.last_login_at,
         created_at=created_user.created_at,
         updated_at=created_user.updated_at,
-        links=create_user_links(created_user.id, request)
+        links=create_user_links(created_user.id, request),
+        is_professional=created_user.is_professional,
+        linkedin_profile_url=created_user.linkedin_profile_url,
+        github_profile_url=created_user.github_profile_url
+
     )
 
 
@@ -251,3 +258,5 @@ async def verify_email(user_id: UUID, token: str, db: AsyncSession = Depends(get
     if await UserService.verify_email_with_token(db, user_id, token):
         return {"message": "Email verified successfully"}
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired verification token")
+
+
