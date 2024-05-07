@@ -200,3 +200,39 @@ async def test_update_user_nickname(db_session, user):
     updated_user = await UserService.update(db_session, user.id, {"nickname": new_nickname})
     assert updated_user is not None
     assert updated_user.nickname == new_nickname
+
+# Test to make an admin user
+async def test_first_admin_role(db_session, email_service):
+    # We are going to assume the database is empty at first
+    user_data = {
+        "nickname": generate_nickname(),
+        "email": "first_admin@example.com",
+        "password": "FirstAdmin123!",
+        "role": UserRole.ADMIN.name
+    }
+    user = await UserService.create(db_session, user_data, email_service)
+    assert user is not None
+    assert user.role == UserRole.ADMIN
+
+# Testing when user updates their password
+async def test_updating_user_password(db_session, user):
+    new_password = "NewPassword123!"
+    updated_user = await UserService.update(db_session, user.id, {"password": new_password})
+    assert updated_user is not None
+    # TBC
+
+# Testing to see if the list of users exceeds the total user count
+async def test_listOfUsers_skip_exceeds_total_user_count(db_session, users_with_same_role_50_users):
+    total_users = await UserService.count(db_session)
+    users = await UserService.list_users(db_session, skip=total_users + 1, limit=10)
+    assert len(users) == 0  # No users should be returned here
+
+# Testing to see if user has correct token for email
+async def test_verify_email_with_invalid_token(db_session, user):
+    incorrect_token = "incorrect_token_example"
+    user.verification_token = "valid_token_example"  # Set a valid token first
+    await db_session.commit()
+    result = await UserService.verify_email_with_token(db_session, user.id, incorrect_token)
+    assert result is False
+
+
