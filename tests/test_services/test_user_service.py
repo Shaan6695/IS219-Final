@@ -235,4 +235,55 @@ async def test_verify_email_with_invalid_token(db_session, user):
     result = await UserService.verify_email_with_token(db_session, user.id, incorrect_token)
     assert result is False
 
+# Test for searching users by their username
+async def test_search_users_by_username(db_session, user):
+    users = await UserService.search_users(db_session, username=user.nickname)
+    assert len(users) == 1
+    assert users[0].id == user.id
 
+# Test for searching for users by their first name
+async def test_search_users_by_first_name(db_session, user):
+    users = await UserService.search_users(db_session, first_name=user.first_name)
+    assert len(users) == 1
+    assert users[0].id == user.id
+
+# Test for searching for users by their email
+async def test_search_users_by_email(db_session, user):
+    users = await UserService.search_users(db_session, email=user.email)
+    assert len(users) == 1
+    assert users[0].id == user.id
+
+# Test for searching for users by their account status if it is (active)
+async def test_search_users_by_account_status_active(db_session, user):
+    users = await UserService.search_users(db_session, account_status="Active")
+    assert len(users) == 1
+    assert users[0].id == user.id
+
+# Test for searching for users by their role
+async def test_search_users_by_role(db_session, user):
+    users = await UserService.search_users(db_session, role=user.role)
+    assert len(users) == 1
+    assert users[0].id == user.id
+
+# Test for searching for users by their last name
+async def test_search_users_by_last_name(db_session, user):
+    users = await UserService.search_users(db_session, last_name=user.last_name)
+    assert len(users) == 1
+    assert users[0].id == user.id
+
+# Test for searching for users with pagination
+async def test_search_users_with_pagination(db_session, users_with_same_role_50_users):
+    users_page_1 = await UserService.search_users(db_session, limit=10)
+    users_page_2 = await UserService.search_users(db_session, skip=10, limit=10)
+    assert len(users_page_1) == 10
+    assert len(users_page_2) == 10
+    assert users_page_1[0].id != users_page_2[0].id
+
+# Test for searching for users if account status is (locked)
+async def test_search_users_by_account_status_locked(db_session, user):
+    # Lock the user account
+    user.is_locked = True
+    await db_session.commit()
+    users = await UserService.search_users(db_session, account_status="Locked")
+    assert len(users) == 1
+    assert users[0].id == user.id
