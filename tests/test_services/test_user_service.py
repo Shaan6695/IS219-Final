@@ -221,12 +221,6 @@ async def test_updating_user_password(db_session, user):
     assert updated_user is not None
     # TBC
 
-# Testing to see if the list of users exceeds the total user count
-async def test_listOfUsers_skip_exceeds_total_user_count(db_session, users_with_same_role_50_users):
-    total_users = await UserService.count(db_session)
-    users = await UserService.list_users(db_session, skip=total_users + 1, limit=10)
-    assert len(users) == 0  # No users should be returned here
-
 # Testing to see if user has correct token for email
 async def test_verify_email_with_invalid_token(db_session, user):
     incorrect_token = "incorrect_token_example"
@@ -234,6 +228,13 @@ async def test_verify_email_with_invalid_token(db_session, user):
     await db_session.commit()
     result = await UserService.verify_email_with_token(db_session, user.id, incorrect_token)
     assert result is False
+
+# Testing to see if the list of users exceeds the total user count
+async def test_listOfUsers_skip_exceeds_total_user_count(db_session, users_with_same_role_50_users):
+    total_users = await UserService.count(db_session)
+    users = await UserService.list_users(db_session, skip=total_users + 1, limit=10)
+    assert len(users) == 0  # No users should be returned here
+
 
 # Test for searching users by their username
 async def test_search_users_by_username(db_session, user):
@@ -271,14 +272,6 @@ async def test_search_users_by_role(db_session, user):
     assert len(users) == 1
     assert users[0].id == user.id
 
-# Test for searching for users with pagination
-async def test_search_users_with_pagination(db_session, users_with_same_role_50_users):
-    users_page_1 = await UserService.search_users(db_session, limit=10)
-    users_page_2 = await UserService.search_users(db_session, skip=10, limit=10)
-    assert len(users_page_1) == 10
-    assert len(users_page_2) == 10
-    assert users_page_1[0].id != users_page_2[0].id
-
 # Test for searching for users if account status is (locked)
 async def test_search_users_by_account_status_locked(db_session, user):
     # Lock the user account
@@ -287,3 +280,11 @@ async def test_search_users_by_account_status_locked(db_session, user):
     users = await UserService.search_users(db_session, account_status="Locked")
     assert len(users) == 1
     assert users[0].id == user.id
+
+# Test for searching for users with pagination
+async def test_search_users_with_pagination(db_session, users_with_same_role_50_users):
+    users_page_1 = await UserService.search_users(db_session, limit=10)
+    users_page_2 = await UserService.search_users(db_session, skip=10, limit=10)
+    assert len(users_page_1) == 10
+    assert len(users_page_2) == 10
+    assert users_page_1[0].id != users_page_2[0].id
