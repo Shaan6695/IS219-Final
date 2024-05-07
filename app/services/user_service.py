@@ -201,11 +201,15 @@ class UserService:
     
     # Implementing search for users
     @classmethod
-    async def search_users(cls, session: AsyncSession, username: Optional[str] = None, email: Optional[str] = None, role: Optional[str] = None, account_status: Optional[str] = None, registration_date_from: Optional[datetime] = None, registration_date_to: Optional[datetime] = None, skip: int = 0, limit: int = 10) -> List[User]:
+    async def search_users(cls, session: AsyncSession, username: Optional[str] = None, email: Optional[str] = None, first_name: Optional[str] = None, last_name: Optional[str] = None, role: Optional[str] = None, account_status: Optional[str] = None, registration_date_from: Optional[datetime] = None, registration_date_to: Optional[datetime] = None, skip: int = 0, limit: int = 10) -> List[User]:
         query = select(User)
         
         if username:
             query = query.filter(func.lower(User.nickname) == func.lower(username))
+        if first_name:
+            query = query.filter(func.lower(User.first_name) == func.lower(first_name))
+        if last_name:
+            query = query.filter(func.lower(User.last_name) == func.lower(last_name))
         if email:
             query = query.filter(func.lower(User.email) == func.lower(email))
         if role:

@@ -247,6 +247,12 @@ async def test_search_users_by_first_name(db_session, user):
     assert len(users) == 1
     assert users[0].id == user.id
 
+# Test for searching for users by their last name
+async def test_search_users_by_last_name(db_session, user):
+    users = await UserService.search_users(db_session, last_name=user.last_name)
+    assert len(users) == 1
+    assert users[0].id == user.id
+
 # Test for searching for users by their email
 async def test_search_users_by_email(db_session, user):
     users = await UserService.search_users(db_session, email=user.email)
@@ -262,12 +268,6 @@ async def test_search_users_by_account_status_active(db_session, user):
 # Test for searching for users by their role
 async def test_search_users_by_role(db_session, user):
     users = await UserService.search_users(db_session, role=user.role)
-    assert len(users) == 1
-    assert users[0].id == user.id
-
-# Test for searching for users by their last name
-async def test_search_users_by_last_name(db_session, user):
-    users = await UserService.search_users(db_session, last_name=user.last_name)
     assert len(users) == 1
     assert users[0].id == user.id
 
