@@ -161,3 +161,21 @@ async def test_unlock_user_account(db_session, locked_user):
     assert unlocked, "The account should be unlocked"
     refreshed_user = await UserService.get_by_id(db_session, locked_user.id)
     assert not refreshed_user.is_locked, "The user should no longer be locked"
+
+# Test registering a user with valid data and verify email is sent after user creation
+async def test_verification_email_after_created_user(db_session, email_service):
+    # Define a test async function to replace send_verification_email
+    async def test_send_verification_email(user):
+        pass
+
+    # Replace the send_verification_email method with the test function
+    email_service.send_verification_email = test_send_verification_email
+
+    # Test User data for registering, using generated names, the role is admin
+    user_data = {
+        "nickname": generate_nickname(),
+        "email": "register_valid_user@example.com",
+        "password": "RegisterValid123!",
+        "role": UserRole.ADMIN
+    }
+
