@@ -1,4 +1,5 @@
 # IS219 Final Project
+![Github Actions Passing](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
 # Link to reflection document -
 (This document includes things like github issues, what feature I chose, dockerhub image and repo, and my reflection. I submitted it on canvas also)
