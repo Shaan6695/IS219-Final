@@ -1,7 +1,7 @@
 # IS219 Final Project
 
 # Link to reflection document -
-(This document includes things like github issues, what feature I chose, dockerhub image and repo, and my reflection.)
+(This document includes things like github issues, what feature I chose, dockerhub image and repo, and my reflection. I submitted it on canvas also)
 https://docs.google.com/document/d/1Hoxqpv6zqA1M9QsWktKrrJ-QkLCoCrRhW4u_LGTh-8c/edit?usp=sharing 
 
 ---------------------
