@@ -14,6 +14,7 @@ https://github.com/Shaan6695/IS219-Final/commit/3db580d65fb6763f0dcbc8599af6e160
 
 https://github.com/Shaan6695/IS219-Final/commit/42e1e984abaa1434e2e52fa5050a265c9d2c3477 
 
+---------------------------------
 
 Link to all issues - 
 https://github.com/Shaan6695/IS219-Final/issues?q=is%3Aissue+is%3Aclosed 
@@ -36,6 +37,7 @@ https://github.com/Shaan6695/IS219-Final/issues/5
 Fixing logging in issue #6 - 
 https://github.com/Shaan6695/IS219-Final/issues/6 
 
+-----------------------------------------
 
 # Dockerhub Link - 
 https://hub.docker.com/r/shaan6695/is219-final-fastapi 
