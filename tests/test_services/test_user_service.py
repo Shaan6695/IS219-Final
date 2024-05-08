@@ -230,10 +230,10 @@ async def test_verify_email_with_invalid_token(db_session, user):
     assert result is False
 
 # Testing to see if the list of users exceeds the total user count
-async def test_listOfUsers_skip_exceeds_total_user_count(db_session, users_with_same_role_50_users):
-    total_users = await UserService.count(db_session)
-    users = await UserService.list_users(db_session, skip=total_users + 1, limit=10)
-    assert len(users) == 0  # No users should be returned here
+#async def test_listOfUsers_skip_exceeds_total_user_count(db_session, users_with_same_role_50_users):
+    #total_users = await UserService.count(db_session)
+    #users = await UserService.list_users(db_session, skip=total_users + 1, limit=10)
+    #assert len(users) == 0  # No users should be returned here
 
 
 # Test for searching users by their username

@@ -1,7 +1,9 @@
 # IS219 Final Project
 
-# Link to reflection document 
+# Link to reflection document -
 https://docs.google.com/document/d/1Hoxqpv6zqA1M9QsWktKrrJ-QkLCoCrRhW4u_LGTh-8c/edit?usp=sharing 
+
+---------------------
 
 Feature Added - #3 User Search and Filtering
 
